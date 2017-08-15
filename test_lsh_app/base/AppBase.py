@@ -20,3 +20,11 @@ class AppBase:
     def getHost(self):
         host = cf.get("app_host","host")
         return host
+
+    def getTestCaseDoc(self,module):
+        if module == 'login':
+            testCaseDoc = cf.get("test_case_doc","loginCase")
+            return testCaseDoc
+        elif module == 'register':
+            testCaseDoc = cf.get("test_case_doc", "registerCase")
+            return testCaseDoc
