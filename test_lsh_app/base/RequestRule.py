@@ -3,6 +3,7 @@ import requests
 
 
 class RequestRule:
+
     #get请求方法
     def get(self,host,url,params):
         resultlist = []

@@ -1,12 +1,14 @@
 #-*- coding: utf-8 -*-
+import json
+import random
 import time
 import os
 
 from xlutils.copy import copy
-
 from test_lsh_app.base.DB import DB
 from test_lsh_app.base.TestCase import TestCase
 from test_lsh_app.base.RequestRule import RequestRule
+from test_lsh_mis.base.MisBasic import MisBasic
 
 requestRule = RequestRule()
 class RegisterTest():
@@ -24,12 +26,28 @@ class RegisterTest():
             # post请求
             if sheet.cell(i, 2).value == 'post':
                 params = eval(sheet.cell(i, 4).value)
+                #对正常注册的case做特殊处理
+                if sheet.cell(i,1).value.encode("utf8") == '正常注册':
+                    count = random.randint(0000001,9999999)
+                    cellphone = "1600"+str(count)#生成随机手机号
+                    params['cellphone'] = int(cellphone)
+                    requestRule.get(host,"/captcha/sms/regSend","cellphone=" + cellphone)
+                    misBasic = MisBasic("qa")
+                    verifyCode = misBasic.getVerifyCode(cellphone)
+                    params['verify_code'] = verifyCode
+                ws.write(i, 4, json.dumps(params))
                 results = requestRule.post(host, url, params)
             # get请求
             elif sheet.cell(i, 2).value == 'get':
                 params = sheet.cell(i, 4).value
-                #对邀请码与地狱不匹配的case特殊处理
-                if sheet.cell(i,1).value.encode("utf8") == '邀请码与地域不匹配':
+                if sheet.cell(i,1).value.encode("utf8") == '带邀请码注册':
+                    db = DB()
+                    data = db.marketQuery("select invite_code from invite_code where uid = 0 and zone_id = 1000 limit 1")
+                    for row in data :
+                        inviteCode  = row['invite_code']
+                    params = params + "&invite_code=" + inviteCode
+                #对邀请码与地域不匹配的case特殊处理
+                elif sheet.cell(i,1).value.encode("utf8") == '邀请码与地域不匹配':
                     db = DB()
                     data = db.marketQuery("select invite_code from invite_code where uid = 0 and zone_id = 1001 limit 1")
                     for row in data:
