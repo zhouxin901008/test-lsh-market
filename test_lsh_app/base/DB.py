@@ -41,7 +41,7 @@ class DB:
             mysqldb.rollback()
         mysqldb.close()
 
-
+    #销售库
     def  getSalesConnection(self):
         cf = ConfigParser.ConfigParser()
         cf.read(os.path.dirname(os.getcwd()) + "/conf/app_config.ini")
@@ -53,7 +53,6 @@ class DB:
         dbConnect = MySQLdb.Connect(host=HOST, port=int(PORT), user=USER, db=DB,charset="utf8")
         return dbConnect
 
-    #销售库
     def salesQuery(self,sql):
         mysql = DB()
         mysqldb = mysql.getSalesConnection()
