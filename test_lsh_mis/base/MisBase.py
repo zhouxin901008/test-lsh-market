@@ -1,8 +1,9 @@
 import ConfigParser
-import os
+import os,sys
+
 
 cf = ConfigParser.ConfigParser()
-cf.read(os.path.dirname(os.getcwd()) + "/conf/mis_config.ini")
+cf.read(os.path.dirname(os.path.split(os.path.realpath(__file__))[0]) + "/conf/mis_config.ini")
 
 class MisBase:
     def getEmail(self):
@@ -13,6 +14,13 @@ class MisBase:
         password = cf.get("mis_user","password")
         return password
 
-    def getHost(self):
-        host = cf.get("mis_host","host")
-        return host
+    def getHost(self,environment):
+        if environment == 'qa':
+            host = cf.get("mis_host","qa_host")
+            return host
+        elif environment == 'qa2':
+            host = cf.get("mis_host", "qa2_host")
+            return host
+        elif environment == 'qa3':
+            host = cf.get("mis_host", "qa3_host")
+            return host

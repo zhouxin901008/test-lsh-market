@@ -6,12 +6,13 @@ import sys
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from test_lsh_app.base.AppBase import AppBase
-from test_lsh_app.login.LoginTest import LoginTest
-from test_lsh_app.login.RegisterTest import RegisterTest
+from test_lsh_app.register_login.LoginTest import LoginTest
+from test_lsh_app.register_login.RegisterTest import RegisterTest
 
-appBase = AppBase()
+
 class TestApp(unittest.TestCase):
     def setUp(self):
+        appBase = AppBase("qa","")
         self.host = appBase.getHost()
 
     def tearDown(self):
@@ -19,15 +20,17 @@ class TestApp(unittest.TestCase):
 
     #测试登录
     def testLogin(self):
-        self.testCaseDoc = appBase.getTestCaseDoc("login")#获得登录testcase文件
+        appBase = AppBase("qa", "login")
+        testCaseDoc = appBase.getTestCaseDoc()#获得登录testcase文件
         loginTest = LoginTest()
-        loginTest.loginTest(self.host,self.testCaseDoc)
+        loginTest.loginTest(self.host,testCaseDoc)
 
     #测试注册
     def testRegister(self):
-        self.testCaseDoc = appBase.getTestCaseDoc("register")#获得注册testcase文件
+        appBase = AppBase("qa", "register")
+        testCaseDoc = appBase.getTestCaseDoc()#获得注册testcase文件
         registerTest = RegisterTest()
-        registerTest.registerTest(self.host,self.testCaseDoc)
+        registerTest.registerTest(self.host,testCaseDoc)
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
