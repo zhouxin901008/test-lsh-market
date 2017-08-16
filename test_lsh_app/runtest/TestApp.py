@@ -17,13 +17,15 @@ class TestApp(unittest.TestCase):
     def tearDown(self):
         pass
 
+    #测试登录
     def testLogin(self):
-        self.testCaseDoc = appBase.getTestCaseDoc("login")
+        self.testCaseDoc = appBase.getTestCaseDoc("login")#获得登录testcase文件
         loginTest = LoginTest()
         loginTest.loginTest(self.host,self.testCaseDoc)
 
+    #测试注册
     def testRegister(self):
-        self.testCaseDoc = appBase.getTestCaseDoc("register")
+        self.testCaseDoc = appBase.getTestCaseDoc("register")#获得注册testcase文件
         registerTest = RegisterTest()
         registerTest.registerTest(self.host,self.testCaseDoc)
 
