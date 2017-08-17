@@ -5,8 +5,9 @@ import xlrd
 
 
 class TestCase:
-    def getAppTestCase(self,testCaseFile):
-        testCaseFile = os.path.join(os.path.dirname(os.getcwd()) + "/appTestCase",testCaseFile)
+    def getAppTestCase(self,testCasePath,testCaseFile):
+        #testCaseFile = os.path.join(os.path.dirname(os.getcwd()) + "/appTestCase",testCaseFile)
+        testCaseFile = os.path.join(testCasePath, testCaseFile)
         #print testCaseFile
         if not os.path.exists(testCaseFile):
             logging.error("测试用例文件不存在!")

@@ -12,10 +12,17 @@ from test_lsh_mis.base.MisBasic import MisBasic
 
 requestRule = RequestRule()
 class RegisterTest():
-    def registerTest(self,host,testCaseDoc):
+    def __init__(self,host,appConfPath,testCasePath,testCaseDoc,testResultsPath):
+        self.host = host
+        self.appConfPath = appConfPath
+        self.testCaseDoc = testCaseDoc
+        self.testCasePath = testCasePath
+        self.testResultsPath = testResultsPath
+
+    def registerTest(self):
         print "---------------注册接口测试开始---------------"
         testCase = TestCase()
-        excel = testCase.getAppTestCase(testCaseDoc)
+        excel = testCase.getAppTestCase(self.testCasePath,self.testCaseDoc)
         sheet = excel.sheets()[0]
         nrows = sheet.nrows
         wb = copy(excel)
@@ -31,12 +38,14 @@ class RegisterTest():
                     count = random.randint(0000001,9999999)
                     cellphone = "1600"+str(count)#生成随机手机号
                     params['cellphone'] = int(cellphone)
-                    requestRule.get(host,"/captcha/sms/regSend","cellphone=" + cellphone)
-                    misBasic = MisBasic("qa")
+                    requestRule.get(self.host,"/captcha/sms/regSend","cellphone=" + cellphone)
+                    time.sleep(0.5)
+                    misConfPath = self.appConfPath.replace('app','mis')
+                    misBasic = MisBasic("qa",misConfPath)
                     verifyCode = misBasic.getVerifyCode(cellphone)
                     params['verify_code'] = verifyCode
                 ws.write(i, 4, json.dumps(params))
-                results = requestRule.post(host, url, params)
+                results = requestRule.post(self.host, url, params)
             # get请求
             elif sheet.cell(i, 2).value == 'get':
                 params = sheet.cell(i, 4).value
@@ -54,7 +63,7 @@ class RegisterTest():
                         inviteCode = row['invite_code']
                     params = params+"&invite_code="+inviteCode
                 ws.write(i, 4, params)
-                results = requestRule.get(host, url, params)
+                results = requestRule.get(self.host, url, params)
             resultTime = results[0]
             resultStatus = results[1]
             resultText = results[2]
@@ -71,5 +80,6 @@ class RegisterTest():
         ws.write(i, 9, "%.2f" % a + "%")
         print "case通过率为%.2f" % a + "%"
         resultTime = time.strftime('%Y-%m-%d_%H:%M:%S')
-        wb.save(os.path.dirname(os.getcwd()) + '/appTestResults/registerTestResult_' + resultTime + '.xls')
+        #wb.save(os.path.dirname(os.getcwd()) + '/appTestResults/registerTestResult_' + resultTime + '.xls')
+        wb.save(self.testResultsPath + 'registerTestResult_' + resultTime + '.xls')
         print "---------------注册接口测试结束---------------"

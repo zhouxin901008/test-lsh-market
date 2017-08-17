@@ -7,11 +7,12 @@ from test_lsh_mis.base.MisBasic import MisBasic
 
 
 class AppBasic:
-    def __init__(self,environment):
+    def __init__(self,environment,path):
         self.environment = environment
+        self.path = path
 
     def getToken(self):
-        base = AppBase("qa","")
+        base = AppBase(self.environment,"",self.path)
         username = base.getUsername()
         password = base.getPassword()
         host = base.getHost()
@@ -21,7 +22,8 @@ class AppBasic:
         if result.json()['ret'] == 1004 :
             #请求验证码
             requests.post(host + '/captcha/sms/sendVerifyUnusual?cellphone=' + username)
-            misBasic = MisBasic()
+            misPath = self.path.replace('app','mis')
+            misBasic = MisBasic(self.environment,misPath)
             verifyCode = misBasic.getVerifyCode(username)
             user = {'username': username, 'password': password, 'verify_code': verifyCode}
             result = requests.post(host + '/user/info/login', params = user, headers=headers)
