@@ -1,13 +1,14 @@
 #-*- coding: utf-8 -*-
-import unittest
 import os
 import sys
+import unittest
+
 
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from test_lsh_app.base.AppBase import AppBase
-from test_lsh_app.register_login.LoginTest import LoginTest
-from test_lsh_app.register_login.RegisterTest import RegisterTest
+from test_lsh_app.modules.login.LoginTest import LoginTest
+from test_lsh_app.modules.register.RegisterTest import RegisterTest
 
 
 class TestApp(unittest.TestCase):
