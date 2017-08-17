@@ -11,10 +11,10 @@ class AppBasic:
         self.environment = environment
 
     def getToken(self):
-        base = AppBase()
+        base = AppBase("qa","")
         username = base.getUsername()
         password = base.getPassword()
-        host = base.getHost(self.environment)
+        host = base.getHost()
         headers = eval(base.getHeaders())
         params = {'username': username, 'password': password}
         result = requests.post(host + '/user/info/login', params = params)
